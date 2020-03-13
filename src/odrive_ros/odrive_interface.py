@@ -40,7 +40,7 @@ class ODriveInterfaceAPI(object):
         if active_odrive: # pass in the odrv0 object from odrivetool shell to use it directly.
             self.driver = active_odrive
             self.axes = (self.driver.axis0, self.driver.axis1)
-            self.right_axis = self.driver.axis0 
+            self.right_axis = self.driver.axis0
             self.left_axis  = self.driver.axis1
             self.logger.info("Loaded pre-existing ODrive interface. Check index search status.")
             self.encoder_cpr = self.driver.axis0.encoder.config.cpr
@@ -262,7 +262,7 @@ class ODriveInterfaceAPI(object):
             self.logger.error("Not connected.")
             return
         #try:
-        self.left_axis.controller.vel_setpoint = -left_motor_val
+        self.left_axis.controller.vel_setpoint = left_motor_val
         self.right_axis.controller.vel_setpoint = right_motor_val
         #except (fibre.protocol.ChannelBrokenException, AttributeError) as e:
         #    raise ODriveFailure(str(e))

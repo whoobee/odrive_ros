@@ -69,7 +69,10 @@ class ODriveNode(object):
     encoder_counts_per_rev = None
     m_s_to_value = 1.0
     axis_for_right = 0
-    encoder_cpr = 90
+    encoder_cpr = 4096
+
+    right_axis_dir = -1
+    left_axis_dir = 1
     
     # Startup parameters
     connect_on_startup = False
@@ -90,6 +93,18 @@ class ODriveNode(object):
         self.wheel_track = float(get_param('~wheel_track', 0.285)) # m, distance between wheel centres
         self.tyre_circumference = float(get_param('~tyre_circumference', 0.341)) # used to translate velocity commands in m/s into motor rpm
         
+        if float(get_param('~right_axis_dirrection', -1)) < 0:
+            self.right_axis_dir = -1
+        else: 
+            self.right_axis_dir = 1
+
+        if float(get_param('~left_axis_dirrection', 1)) < 0:
+            self.left_axis_dir = -1
+        else: 
+            self.left_axis_dir = 1
+
+        self.encoder_cpr = float(get_param('~encoder_cpr', 4096))
+
         self.connect_on_startup   = get_param('~connect_on_startup', False)
         #self.calibrate_on_startup = get_param('~calibrate_on_startup', False)
         #self.engage_on_startup    = get_param('~engage_on_startup', False)
@@ -395,7 +410,7 @@ class ODriveNode(object):
                         self.status = "engaged"
                         
                     left_linear_val, right_linear_val = motor_command[1]
-                    self.driver.drive(left_linear_val, right_linear_val)
+                    self.driver.drive(self.left_axis_dir * left_linear_val, self.right_axis_dir * right_linear_val)
                     self.last_speed = max(abs(left_linear_val), abs(right_linear_val))
                     self.last_cmd_vel_time = time_now
                 except (ChannelBrokenException, ChannelDamagedException):
