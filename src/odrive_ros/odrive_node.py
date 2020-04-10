@@ -324,10 +324,10 @@ class ODriveNode(object):
                     self.m_s_to_value = self.encoder_cpr/self.tyre_circumference # calculated
                 
                     self.driver.update_time(time_now.to_sec())
-                    self.vel_l = self.driver.left_vel_estimate()   # units: encoder counts/s
-                    self.vel_r = -self.driver.right_vel_estimate() # neg is forward for right
-                    self.new_pos_l = self.driver.left_pos()        # units: encoder counts
-                    self.new_pos_r = -self.driver.right_pos()      # sign!
+                    self.vel_l = (self.left_axis_dir * self.driver.left_vel_estimate())   # units: encoder counts/s
+                    self.vel_r = (self.right_axis_dir * self.driver.right_vel_estimate()) # neg is forward for right
+                    self.new_pos_l = (self.left_axis_dir * self.driver.left_pos())        # units: encoder counts
+                    self.new_pos_r = (self.right_axis_dir * self.driver.right_pos())      # sign!
                     
                     # for temperatures
                     self.temp_v_l = self.driver.left_temperature()
