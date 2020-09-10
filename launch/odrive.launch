@@ -10,7 +10,7 @@
     <arg name="left_axis_dirrection"    default="-1"/>
 
     <arg name="publish_odom"        default="true"/>
-    <arg name="publish_odom_tf"     default="true"/>
+    <arg name="publish_odom_tf"     default="false"/>
     
     <arg name="output"  default="screen"/>
     <arg name="respawn" default="false"/>
@@ -32,6 +32,6 @@
         <param name="publish_odom"         value="$(arg publish_odom)"/>
         <param name="publish_odom_tf"      value="$(arg publish_odom_tf)"/>
     </node>
-    <node pkg="tf" type="static_transform_publisher" name="odom_to_base_link"
-    args="0.0 0.0 0.0 0.0 0.0  0.0 /odrive/odom /base_link 40" />
+    <!--<node pkg="tf" type="static_transform_publisher" name="odom_to_base_link"
+    args="0.0 0.0 0.0 0.0 0.0  0.0 /odrive/odom /base_link 40" />-->
 </launch>
