@@ -83,6 +83,8 @@ class ODriveNode(object):
     # Simulation mode
     # When enabled, output simulated odometry and joint angles (TODO: do joint angles anyway from ?)
     sim_mode = False
+
+    status_pub_rate = 0
     
     def __init__(self):
         self.sim_mode             = get_param('simulation_mode', False)
@@ -135,7 +137,7 @@ class ODriveNode(object):
         rospy.Service('enable_odometry_updates', std_srvs.srv.SetBool, self.enable_odometry_update_service)
         
         self.status_pub = rospy.Publisher('status', std_msgs.msg.String, latch=True, queue_size=2)
-        self.status = "disconnected"
+        self.status = "initializing"
         self.status_pub.publish(self.status)
         
         self.command_queue = Queue.Queue(maxsize=5)
@@ -426,9 +428,17 @@ class ODriveNode(object):
             # ?
             else:
                 pass
+        #send driver status every 1s
+        if(self.status_pub_rate == 10):
+            self.status_pub_rate = 0
+            self.status_pub.publish(self.status)
+        else:
+            self.status_pub_rate = self.status_pub_rate + 1
     
     
     def terminate(self):
+        self.status = "disconnected"
+        self.status_pub.publish(self.status)
         self.fast_timer.shutdown()
         if self.driver:
             self.driver.release()
